@@ -9,27 +9,64 @@ class Game extends Component {
       row: 10,
       column: 10,
       grids: new Array(100).fill(0),
-      mines: new Array(100).fill(0)
+      mines: new Array(100).fill(0),
+      cheat: false,
+      minesMarked: 0,
+      totalMines: 10
     };
   }
 
   updateGrid = (type, index) => {
+    this.checkResult(type, index);
     let grids = this.state.grids;
-    if (this.state.mines[index] === 0)
+    let minesMarked = this.state.minesMarked;
+    if (this.state.mines[index] === 0 && type !== 2)
       this.expandGridNearby(index);
-    grids[index] = type;
-    this.setState({grids: grids});
+    if (type === 2) {
+      minesMarked++;
+    } else if (type === 0) {
+      minesMarked--;
+    }
+    if (type === 0 && this.state.mines[index] === -1) {
+      grids[index] = 3;
+    } else {
+      grids[index] = type;
+    }
+    this.setState({grids: grids, minesMarked: minesMarked});
+  }
+
+  checkResult = (type, index) => {
+    if (type === 1 && this.state.grids[index] === 3) {
+      this.setState({cheat: true}, () => {
+        alert('You lost');
+        this.restart();
+      });
+    } else if (type === 2 && this.allMinesMarked()) {
+      alert('You win');
+      this.restart();
+    }
+  }
+
+  allMinesMarked = () => {
+    let match = 0;
+    let grids = this.state.grids;
+    let mines = this.state.mines;
+    for (let i = 0; i < grids; i++) {
+      if (grids[i] === 2 && mines[i] === -1)
+        match++;
+    }
+    return match === this.state.totalMines;
   }
 
   expandGridNearby = (index) => {
     let grids = this.state.grids;
     if (grids[index] > 0)
       return false;
-    let gridsAround = this.getGridsAround(index); console.log(index, gridsAround);
+    let gridsAround = this.getGridsAround(index);
     let total = this.state.row * this.state.column;
     for (let i = 0; i < gridsAround.length; i++) {
       if (gridsAround[i] >=0 && gridsAround[i] < total) {
-        if (this.state.mines[gridsAround[i]] === 0) {
+        if (this.state.mines[gridsAround[i]] === 0 && grids[gridsAround[i]] === 0) {
           this.expandGridNearby(gridsAround[i]);
         }
         grids[gridsAround[i]] = 1;
@@ -112,22 +149,46 @@ class Game extends Component {
     this.setState({grids: grids});
     for (let i = 0; i < mines.length; i++) {
       mines[i] = this.calculateMineAround(i);
+      if (grids[i] === 3)
+        mines[i] = -1;
     }
     this.setState({mines: mines});
   }
 
+  restart = () => {
+    this.setState({
+      row: 10,
+      column: 10,
+      grids: new Array(100).fill(0),
+      mines: new Array(100).fill(0),
+      cheat: false,
+      minesMarked: 0,
+      totalMines: 10
+    }, () => {this.generateMines(this.state.totalMines);});
+  }
+
+  cheatToggle = () => {
+    this.setState({cheat: !this.state.cheat});
+  }
+
   componentDidMount = () => {
-    this.generateMines(10);
+    this.generateMines(this.state.totalMines);
   }
 
   render() {
     return (
       <div className="Game">
+        <div className="buttons">
+          <button onClick={this.restart}>Restart</button>
+          <button onClick={this.cheatToggle}>{this.state.cheat? 'Hide Mines': 'Show Mines'}</button>
+          <span>Mines marked: {this.state.minesMarked} / {this.state.totalMines}</span>
+        </div>
         <Board
           row={this.state.row}
           column={this.state.column}
           grids={this.state.grids}
           mines={this.state.mines}
+          cheat={this.state.cheat}
           updateGrid={this.updateGrid}
         />
       </div>

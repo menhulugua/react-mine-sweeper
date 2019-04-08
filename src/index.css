@@ -21,6 +21,7 @@ code {
   background-color: #ccc;
   cursor: pointer;
   text-align: center;
+  position: relative;
 }
 
 .grid:hover {
@@ -41,8 +42,9 @@ code {
 
 .grid span {
   font-size: 18px;
-  padding:20px;
-  line-height: 50px;
+  position: absolute;
+  left: 20px;
+  top: 15px;
   opacity: 0;
 }
 
@@ -52,4 +54,18 @@ code {
 
 .boardRow {
   height: 54px;
+}
+
+.buttons {
+  padding: 20px;
+}
+
+.buttons button {
+  margin: 0 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.buttons span {
+  margin-left: 20px;
 }

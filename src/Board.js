@@ -21,7 +21,7 @@ class Board extends Component {
     for (let i = 0; i < row; i++) {
       let columns = [];
       for (let j = 0; j < column; j++) {
-        columns.push(<Grid onClick={this.handleClick} key={`row-${i}-col-${j}`} row={i} column={j} width={column} height={row} type={this.props.grids[index]} mines={this.props.mines[index]}/>);
+        columns.push(<Grid onClick={this.handleClick} key={`row-${i}-col-${j}`} row={i} column={j} width={column} height={row} type={this.props.grids[index]} mines={this.props.mines[index]} cheat={this.props.cheat}/>);
         index++;
       }
       grids.push(<div className="boardRow" key={`row-${i}`}>{columns}</div>);
