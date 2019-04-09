@@ -28,15 +28,15 @@ code {
   background-color: #ffff99;
 }
 
-.grid.type-1 {
-  background-color: #aaa;
-}
-
 .grid.type-2 {
   background-color: red;
 }
 
-.grid.type-3 {
+.grid.type-3, .grid.type-4 {
+  background-color: #aaa;
+}
+
+.grid.type-5 {
   background-color: #000;
 }
 
@@ -45,11 +45,6 @@ code {
   position: absolute;
   left: 20px;
   top: 15px;
-  opacity: 0;
-}
-
-.grid.type-1 span {
-  opacity: 1;
 }
 
 .boardRow {

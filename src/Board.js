@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 import Grid from './Grid';
 
 class Board extends Component {
-  handleClick = (event, type, index) => {
+  handleClick = (event, leftRight, index, type) => {
     event.preventDefault();
-    if (!event.target.classList.contains('type-1')) {
-      if (event.target.classList.contains('type-2')) {
-        if (type === 2)
-          this.props.updateGrid(0, index);
-      } else
-        this.props.updateGrid(type, index);
-    }
+    this.props.updateGrid(leftRight, index, type);
   }
 
   render() {
@@ -21,7 +15,7 @@ class Board extends Component {
     for (let i = 0; i < row; i++) {
       let columns = [];
       for (let j = 0; j < column; j++) {
-        columns.push(<Grid onClick={this.handleClick} key={`row-${i}-col-${j}`} row={i} column={j} width={column} height={row} type={this.props.grids[index]} mines={this.props.mines[index]} cheat={this.props.cheat}/>);
+        columns.push(<Grid onClick={this.handleClick} key={`row-${i}-col-${j}`} index={index} type={this.props.grids[index]} mines={this.props.mines[index]} />);
         index++;
       }
       grids.push(<div className="boardRow" key={`row-${i}`}>{columns}</div>);
